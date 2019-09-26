@@ -16,7 +16,7 @@ app.use(session({
   }
 }))
 
-app.get('/api/pokemon/all', pokeCtrl.getAllPokemon)
+app.get('/api/pokemon', pokeCtrl.getAllPokemon)
 
 
 massive(CONNECTION_STRING).then(db => {
