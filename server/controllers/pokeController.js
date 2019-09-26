@@ -64,5 +64,28 @@ module.exports = {
     }))
 
     res.status(200).send(pokemon)
+  },
+
+  getPokemonByName: async (req, res) => {
+    const {name} = req.params
+    let details = await client.hget(name, 'details')
+
+    if(details){
+      return res.status(200).send(JSON.parse(details))
+    }
+
+    try {
+      details = await axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
+      const info = {
+        sprites: details.data.sprites,
+        id: details.data.id,
+        height: details.data.height,
+        weight: details.data.weight
+      }
+      client.hmset(name, 'details', JSON.stringify(details.data), 'info', JSON.stringify(info))
+      return res.status(200).send(details.data)
+    } catch (error) {
+      return res.status(404).send('Pokemon not found')
+    }
   }
 }
