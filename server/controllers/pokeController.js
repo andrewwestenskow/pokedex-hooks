@@ -63,7 +63,9 @@ module.exports = {
       }
     }))
 
-    res.status(200).send(pokemon)
+    const length = await client.llen('pokemon')
+
+    res.status(200).send({pokemon, max: length})
   },
 
   getPokemonByName: async (req, res) => {

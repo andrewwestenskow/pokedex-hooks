@@ -7,6 +7,7 @@ module.exports = {
   get: promisify(client.get).bind(client),
   exists: promisify(client.exists).bind(client),
   lrange: promisify(client.lrange).bind(client),
+  llen: promisify(client.llen).bind(client),
   set: promisify(client.set).bind(client),
   rpush: promisify(client.rpush).bind(client),
   del: promisify(client.del).bind(client),
