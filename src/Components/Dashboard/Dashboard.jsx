@@ -10,18 +10,18 @@ const Dashboard = (props) => {
   return (
     <div className='Dashboard'>
       <div className="pokemon-list-hold">
-        {data ? data.pokemon.map(element => (
+        {data.pokemon.length > 0 ? data.pokemon.map(element => (
           <DashPokemon key={element.info.id} data={element} />
         )) : <p>Loading</p>}
       </div>
       <div className="list-button-hold">
         <button
-          disabled={range[0] <= 0}
+          disabled={range[0] <= 0 || data.pokemon.length === 0}
           onClick={() => setRange([range[0] - 50, range[1] - 50])}
         >Prev
         </button>
         <button
-          disabled={range[1] > data.max}
+          disabled={range[1] > data.max || data.pokemon.length === 0}
           onClick={() => setRange([range[0] + 50, range[1] + 50])}
         >Next
       </button>
