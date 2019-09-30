@@ -2,9 +2,12 @@ import React from 'react'
 
 
 const DashPokemon = (props) => {
+  console.log(props.data.info)
+  const {info} = props.data
   return (
-    <div>
-      {/* <img src={props.data.info.sprites.front_default} alt=""/> */}
+    <div className='DashPokemon'>
+      {info.id}
+      <img src={info.sprites.front_default} alt=""/>
       {props.data.name}
     </div>
   )

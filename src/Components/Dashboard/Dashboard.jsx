@@ -1,32 +1,29 @@
-import React, { useState } from 'react'
-import useAxios from '../../hooks/useAxios'
+import React, { useState} from 'react'
 import DashPokemon from './DashPokemon/DashPokemon'
+import FetchPokemon from '../../hooks/FetchPokemon'
 
 const Dashboard = (props) => {
-  const [range, setRange] = useState([0, 24])
-
-  const queries = [{ query: 'start', value: range[0] }, { query: 'end', value: range[1] }]
-
-  const data = useAxios('/api/pokemon', 'get', null, [], '', queries)
-  const pokemon = data.pokemon
-
+  const [range, setRange] = useState([0, 49])
+  
+  const data = FetchPokemon({pokemon: [], max: 0}, range[0], range[1])
 
   return (
     <div className='Dashboard'>
       <div className="pokemon-list-hold">
-        {pokemon && pokemon.map(element => (
+        {data ? data.pokemon.map(element => (
           <DashPokemon key={element.info.id} data={element} />
-        ))}
+        )) : <p>Loading</p>}
       </div>
       <div className="list-button-hold">
         <button
           disabled={range[0] <= 0}
-          onClick={() => setRange([range[0] - 25, range[1] - 25])}
+          onClick={() => setRange([range[0] - 50, range[1] - 50])}
         >Prev
         </button>
         <button
           disabled={range[1] > data.max}
-          onClick={() => setRange([range[0] + 25, range[1] + 25])}>Next
+          onClick={() => setRange([range[0] + 50, range[1] + 50])}
+        >Next
       </button>
       </div>
     </div>
