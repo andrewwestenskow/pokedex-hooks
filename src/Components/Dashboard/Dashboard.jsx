@@ -3,9 +3,6 @@ import useAxios from '../../hooks/useAxios'
 import DashPokemon from './DashPokemon/DashPokemon'
 
 const Dashboard = (props) => {
-
-  console.log(props)
-
   const [range, setRange] = useState([0, 24])
 
   const queries = [{ query: 'start', value: range[0] }, { query: 'end', value: range[1] }]
@@ -13,17 +10,25 @@ const Dashboard = (props) => {
   const data = useAxios('/api/pokemon', 'get', null, [], '', queries)
   const pokemon = data.pokemon
 
+
   return (
-    <div>
-      {pokemon && pokemon.map(element => (
-        <DashPokemon key={element.info.id} data={element} />
-      ))}
-      {range[0] > 0 && <button
-        onClick={() => setRange([range[0] - 25, range[1] - 25])}
-      >Prev</button>}
-      {range[1] < data.max && <button
-        onClick={() => setRange([range[0] + 25, range[1] + 25])}>Next
-      </button>}
+    <div className='Dashboard'>
+      <div className="pokemon-list-hold">
+        {pokemon && pokemon.map(element => (
+          <DashPokemon key={element.info.id} data={element} />
+        ))}
+      </div>
+      <div className="list-button-hold">
+        <button
+          disabled={range[0] <= 0}
+          onClick={() => setRange([range[0] - 25, range[1] - 25])}
+        >Prev
+        </button>
+        <button
+          disabled={range[1] > data.max}
+          onClick={() => setRange([range[0] + 25, range[1] + 25])}>Next
+      </button>
+      </div>
     </div>
   )
 }
