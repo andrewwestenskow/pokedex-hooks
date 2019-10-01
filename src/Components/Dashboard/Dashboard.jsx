@@ -3,7 +3,7 @@ import DashPokemon from './DashPokemon/DashPokemon'
 import FetchPokemon from '../../hooks/FetchPokemon'
 
 const Dashboard = (props) => {
-  const [range, setRange] = useState([0, 24])
+  const [range, setRange] = useState([0, 99])
   
   const data = FetchPokemon({pokemon: [], max: 0}, range[0], range[1])
 
@@ -19,12 +19,12 @@ const Dashboard = (props) => {
       <div className="list-button-hold">
         <button
           disabled={range[0] <= 0 || data.pokemon.length === 0}
-          onClick={() => setRange([range[0] - 25, range[1] - 25])}
+          onClick={() => setRange([range[0] - 100, range[1] - 100])}
         >Prev
         </button>
         <button
           disabled={range[1] > data.max || data.pokemon.length === 0}
-          onClick={() => setRange([range[0] + 25, range[1] + 25])}
+          onClick={() => setRange([range[0] + 100, range[1] + 100])}
         >Next
       </button>
       </div>

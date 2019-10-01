@@ -5,14 +5,15 @@
   width: 250px;
   height: 300px;
   margin: 5px;
-  background: #fbf30d;
+  background-image: url('../../../Assets/background.png');
   justify-content: center;
   align-items: center;
   .dash-pokemon-dark-background{
     position: relative;
-    width: 90%;
-    height: 90%;
-    background: orange;
+    width: 95%;
+    height: 95%;
+    background-position: center;
+    background-size: contain;
     .dash-pokemon-id{
       position: absolute;
       top: 2px;
