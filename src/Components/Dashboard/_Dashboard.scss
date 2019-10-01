@@ -3,14 +3,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 100vw;
   .pokemon-list-hold{
-    width: 1200px;
+    max-width: 1300px;
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-evenly;
   }
 
   .list-button-hold{
-    width: 1200px;
+    max-width: 1300px;
     display: flex;
     justify-content: space-between;
   }

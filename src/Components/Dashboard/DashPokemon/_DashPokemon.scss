@@ -2,4 +2,55 @@
   border: 1px solid black;
   display: flex;
   flex-direction: column;
+  width: 250px;
+  height: 300px;
+  margin: 5px;
+  background: #fbf30d;
+  justify-content: center;
+  align-items: center;
+  .dash-pokemon-dark-background{
+    position: relative;
+    width: 90%;
+    height: 90%;
+    background: orange;
+    .dash-pokemon-id{
+      position: absolute;
+      top: 2px;
+      right: 2px;
+    }
+  }
+}
+
+.dragon{
+  background-image: url('../../../Assets/dragon.png')
+}
+.dark{
+  background-image: url('../../../Assets/dark.png')
+}
+.fairy{
+  background-image: url('../../../Assets/fairy.png')
+}
+.fighting{
+  background-image: url('../../../Assets/fighting.png')
+}
+.fire{
+  background-image: url('../../../Assets/fire.png')
+}
+.grass{
+  background-image: url('../../../Assets/grass.png')
+}
+.normal{
+  background-image: url('../../../Assets/normal.png')
+}
+.psychic{
+  background-image: url('../../../Assets/psychic.png')
+}
+.steel{
+  background-image: url('../../../Assets/steel.png')
+}
+.thunder{
+  background-image: url('../../../Assets/thunder.png')
+}
+.water{
+  background-image: url('../../../Assets/water.png')
 }

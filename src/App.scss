@@ -1,4 +1,9 @@
 @import './reset.scss';
 
+.App{
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
 @import './Components/Dashboard/Dashboard';
 @import './Components/Dashboard/DashPokemon/DashPokemon';
