@@ -7,7 +7,7 @@ const FetchPokemon = (initialData, start, end) => {
   useEffect(() => {
     setData({pokemon: [], max: 0})
     axios.get(`/api/pokemon?start=${start}&end=${end}`).then(res => {
-      console.log(res)
+      // console.log(res)
       setData(res.data)
     }).catch(err => console.log(err))
   }, [start, end])

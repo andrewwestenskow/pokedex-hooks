@@ -4,7 +4,7 @@ const DashPokemon = (props) => {
   // console.log(props.data.info)
   const { info } = props.data
   const {type} = info
-  console.log(`Name: ${props.data.name} type: ${type}`)
+  // console.log(`Name: ${props.data.name} type: ${type}`)
   let background
   switch (type) {
     case 'dark':
@@ -47,17 +47,19 @@ const DashPokemon = (props) => {
     case 'ice':
       background = 'water'
       break;
+    default:
+      background = 'normal'
+      break;
   }
   return (
     <div className='DashPokemon'>
       <div className={`dash-pokemon-dark-background ${background}`}>
-        <p className="dash-pokemon-id">
-          {info.id}
-        </p>
-        <img src={info.sprites.front_default} alt="" />
         <p className="dash-pokemon-name">
           {props.data.name}
         </p>
+        <div className="dash-pokemon-profile">
+          <img src={info.sprites.front_default} alt="" />
+        </div>
       </div>
     </div>
   )
