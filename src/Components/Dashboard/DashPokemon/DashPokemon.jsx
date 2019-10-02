@@ -1,4 +1,5 @@
 import React from 'react'
+import getHeight from '../../../functions/getHeight'
 
 const DashPokemon = (props) => {
   // console.log(props.data.info)
@@ -51,6 +52,7 @@ const DashPokemon = (props) => {
       background = 'normal'
       break;
   }
+  const height = getHeight(info.height)
   return (
     <div className='DashPokemon'>
       <div className={`dash-pokemon-dark-background ${background}`}>
@@ -59,6 +61,10 @@ const DashPokemon = (props) => {
         </p>
         <div className="dash-pokemon-profile">
           <img src={info.sprites.front_default} alt="" />
+        </div>
+        <div className="dash-pokemon-details">
+          <p>{height}</p>
+          {/* <p>{info.weight}</p> */}
         </div>
       </div>
     </div>
