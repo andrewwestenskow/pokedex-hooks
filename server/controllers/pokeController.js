@@ -53,7 +53,7 @@ module.exports = {
           id: details.data.id,
           height: details.data.height,
           weight: details.data.weight,
-          abilities: details.data.abilities,
+          moves: details.data.moves,
           type: details.data.types[0].type.name
         }
         client.hmset(object.name, 'details', JSON.stringify(details.data), 'info', JSON.stringify(info))

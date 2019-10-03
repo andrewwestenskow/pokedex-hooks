@@ -27,13 +27,14 @@
       align-self: flex-start;
     }
     .dash-pokemon-profile{
-      background: white;
+      // background: white;
+      background-position: center;
+      background-size: 100%;
       width: 95%;
       height: 40%;
       border: 1px solid black;
       display: flex;
       justify-content: center;
-      align-items: center;
     }
     .dash-pokemon-id{
       position: absolute;
@@ -41,7 +42,16 @@
       right: 2px;
     }
     .dash-pokemon-details{
+      margin-top: 2px;
+      padding: 2px;
+      padding-top: 4px;
       display: flex;
+      justify-content: center;
+      text-transform: capitalize;
+      background: yellow;
+      width: 94%;
+      font-size: 0.63rem;
+      font-weight: 500;
     }
   }
 }
@@ -78,4 +88,12 @@
 }
 .water{
   background-image: url('../../../Assets/water.png')
+}
+
+.darkbg{
+  background-image: url('../../../Assets/bg/darkbg.jpg')
+}
+
+.groundbg{
+  background-image: url('../../../Assets/bg/groundbg.jpg')
 }
