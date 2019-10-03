@@ -6,18 +6,15 @@ const FetchPokemon = (initialData, page, perPage) => {
   // const [range, setRange] = useState(initialData)
   const start = ((page - 1) * perPage)
   const end = (start + (perPage - 1))
-  console.log(`START: ${start} END: ${end}`)
   useEffect(() => {
     setData({pokemon: [], max: 0})
     axios.get(`/api/pokemon?start=${start}&end=${end}`).then(res => {
       let maxPage = Math.ceil(res.data.max / perPage)
       if(page > maxPage){
-        console.log('BAD BOY')
+        setData({pokemon: [], max: maxPage})
+      } else {
+        setData(res.data)
       }
-      console.log(res)
-      setData(res.data)
-    }).catch(err => {
-      console.log(err)
     })
   }, [page, perPage, start, end])
   return data

@@ -5,7 +5,9 @@ import PageButtons from './PageButtons/PageButtons'
 
 const Dashboard = (props) => {  
   const data = FetchPokemon({pokemon: [], max: 0}, props.match.params.page, 50)
-
+  if(data.pokemon.length === 0 && data.max !== 0){
+    props.history.push(`/cards/page/${data.max}`)
+  }
   return (
     <div className='Dashboard'>
       <div className="pokemon-list-hold">

@@ -19,9 +19,9 @@ app.use(session({
 app.get('/api/pokemon', pokeCtrl.getAllPokemon)
 app.get('/api/pokemon/:name', pokeCtrl.getPokemonByName)
 
+app.listen(SERVER_PORT, () => console.log(`listening on port ${SERVER_PORT}`))
 
-massive(CONNECTION_STRING).then(db => {
-  app.set('db', db)
-  console.log('db set')
-  app.listen(SERVER_PORT, () => console.log(`listening on port ${SERVER_PORT}`))
-})
+// massive(CONNECTION_STRING).then(db => {
+//   app.set('db', db)
+//   console.log('db set')
+// })

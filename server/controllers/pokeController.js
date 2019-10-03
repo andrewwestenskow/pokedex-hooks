@@ -4,13 +4,19 @@ const client = require('../redisAsync')
 module.exports = {
   getAllPokemon: async (req, res) => {
     const { start, end } = req.query
+
+    console.log(start, end)
     if (+end - +start > 100 && +start !== +end) {
       return res.status(403).send('invalid range')
     }
     const exists = await client.exists('pokemon')
     const count = await client.get('count')
     let url = 'https://pokeapi.co/api/v2/pokemon'
-
+    
+    if(start === 'NaN'){
+      console.log('yep')
+      return res.status(416).send({pokemon: [], range: count})
+    }
     const updateList = async () => {
       let keepGoing = true
       while (keepGoing) {
