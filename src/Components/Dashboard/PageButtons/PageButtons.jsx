@@ -1,14 +1,22 @@
 import React from 'react'
-import {Link, withRouter} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 
 
 const PageButtons = (props) => {
-  const {page} = props.match.params
   const numPages = Math.ceil(props.max / props.perPage)
   const pageButtons = []
+  let background
   for(let i = 1; i <= numPages; i++){
+    if(i === +props.current){
+      background = 'current-page'
+    } else {
+      background = undefined
+    }
     pageButtons.push(
-      <Link to={`/cards/page/${i}`} key={i} className='page-button'>{i}</Link>
+      <Link 
+      to={`/cards/page/${i}`} 
+      key={i} 
+      className={`page-button ${background}`}>{i}</Link>
     )
   }
   return (
@@ -17,4 +25,4 @@ const PageButtons = (props) => {
     </div>
   )
 }
-export default withRouter(PageButtons)
+export default PageButtons

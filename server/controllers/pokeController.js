@@ -3,8 +3,8 @@ const client = require('../redisAsync')
 
 module.exports = {
   getAllPokemon: async (req, res) => {
-    const {start, end} = req.query
-    if(+end - +start > 100 && +start !== +end){
+    const { start, end } = req.query
+    if (+end - +start > 100 && +start !== +end) {
       return res.status(403).send('invalid range')
     }
     const exists = await client.exists('pokemon')
@@ -29,19 +29,19 @@ module.exports = {
       await updateList()
     } else {
       const countUpdate = await axios.get(url)
-      if(countUpdate.data.count !== +count){
+      if (countUpdate.data.count !== +count) {
         client.del('pokemon')
         await updateList()
       }
     }
 
-    const data = await client.lrange('pokemon', start, end)
 
+    const data = await client.lrange('pokemon', +start, +end)
     const pokemon = await Promise.all(data.map(async element => {
       const object = JSON.parse(element)
       const exists = await client.hget(object.name, 'info')
-      if(exists){
-        return{
+      if (exists) {
+        return {
           name: object.name,
           url: object.url,
           info: JSON.parse(exists)
@@ -57,7 +57,7 @@ module.exports = {
           type: details.data.types[0].type.name
         }
         client.hmset(object.name, 'details', JSON.stringify(details.data), 'info', JSON.stringify(info))
-        return{
+        return {
           name: object.name,
           url: object.url,
           info: info
@@ -67,14 +67,15 @@ module.exports = {
 
     const length = await client.llen('pokemon')
 
-    res.status(200).send({pokemon, max: length})
+    res.status(200).send({ pokemon, max: length })
+
   },
 
   getPokemonByName: async (req, res) => {
-    const {name} = req.params
+    const { name } = req.params
     let details = await client.hget(name, 'details')
 
-    if(details){
+    if (details) {
       return res.status(200).send(JSON.parse(details))
     }
 

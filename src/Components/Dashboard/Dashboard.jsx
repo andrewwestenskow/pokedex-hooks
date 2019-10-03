@@ -2,13 +2,9 @@ import React from 'react'
 import DashPokemon from './DashPokemon/DashPokemon'
 import FetchPokemon from '../../hooks/FetchPokemon'
 import PageButtons from './PageButtons/PageButtons'
-import GetRange from '../../hooks/GetRange'
 
 const Dashboard = (props) => {  
-  const range = GetRange([], props.match.params.page, 50)
-  const data = FetchPokemon({pokemon: [], max: 0}, range[0], range[1])
-  console.log(data)
-
+  const data = FetchPokemon({pokemon: [], max: 0}, props.match.params.page, 50)
 
   return (
     <div className='Dashboard'>
@@ -20,6 +16,7 @@ const Dashboard = (props) => {
         <PageButtons
         perPage={50}
         max={data.max}
+        current={props.match.params.page}
         />
     </div>
   )
