@@ -11,10 +11,7 @@ const Dashboard = (props) => {
   if(data.pokemon.length === 0 && data.max !== 0){
     props.history.push(`/cards/page/${data.max}`)
   }
-
-  
-
-  // console.log(perPage)
+  // console.log(props.match)
   return (
     <div className='Dashboard'>
       <div className="pokemon-list-hold">
