@@ -14,7 +14,7 @@ const PageButtons = (props) => {
     }
     pageButtons.push(
       <Link 
-      to={`/cards/page/${i}`} 
+      to={`/cards/page/${i}?perPage=${props.perPage}`} 
       key={i} 
       className={`page-button ${background}`}>{i}</Link>
     )

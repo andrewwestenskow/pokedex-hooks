@@ -2,12 +2,19 @@ import React from 'react'
 import DashPokemon from './DashPokemon/DashPokemon'
 import FetchPokemon from '../../hooks/FetchPokemon'
 import PageButtons from './PageButtons/PageButtons'
+import GetPerPage from '../../hooks/GetPerPage'
 
 const Dashboard = (props) => {  
-  const data = FetchPokemon({pokemon: [], max: 0}, props.match.params.page, 50)
+  const perPage = GetPerPage(50)
+
+  const data = FetchPokemon({pokemon: [], max: 0}, props.match.params.page, perPage)
   if(data.pokemon.length === 0 && data.max !== 0){
     props.history.push(`/cards/page/${data.max}`)
   }
+
+  
+
+  // console.log(perPage)
   return (
     <div className='Dashboard'>
       <div className="pokemon-list-hold">
@@ -16,7 +23,7 @@ const Dashboard = (props) => {
         )) : <p>Loading</p>}
       </div>
         <PageButtons
-        perPage={50}
+        perPage={+perPage}
         max={data.max}
         current={props.match.params.page}
         />
