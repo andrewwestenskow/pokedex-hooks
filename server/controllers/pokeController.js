@@ -1,5 +1,6 @@
 const axios = require('axios')
 const client = require('../redisAsync')
+const Fuse = require('fuse.js')
 
 module.exports = {
   getAllPokemon: async (req, res) => {
@@ -79,7 +80,26 @@ module.exports = {
 
   getPokemonByName: async (req, res) => {
     const { name } = req.params
-    let details = await client.hget(name, 'details')
+    const list = await client.lrange('pokemon', 0, -1)
+    list.forEach((element, index, array) => {
+      array[index] = JSON.parse(element)
+    })
+    
+    const options = {
+      shouldSort: true,
+      threshold: 0.6,
+      location: 0,
+      distance: 100,
+      maxPatternLength: 32,
+      minMatchCharLength: 1,
+      keys: [
+        "name"
+      ]
+    };
+    const fuse = new Fuse(list, options); // "list" is the item array
+    const result = fuse.search(name);
+    console.log(result.slice(0,4))
+    let details = await client.hget(result[0].name, 'details')
 
     if (details) {
       return res.status(200).send(JSON.parse(details))
