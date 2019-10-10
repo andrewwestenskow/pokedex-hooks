@@ -18,26 +18,32 @@ const Header = (props) => {
 
   return (
     <div className='Header'>
-      <form
-        onSubmit={(e) => handleSearch(e)}
-        className='search-form'
-      >
-        <input
-          type="text"
-          placeholder='Search for a Pokemon'
-          onChange={(e) => setSearch(e.target.value)}
-          value={search}
-        />
-      </form>
-      <select
-        defaultValue="50"
-        onChange={(e) => setPerPage(e.target.value)}
-        className='per-page-select'
-      >
-        <option value="25">25</option>
-        <option value="50">50</option>
-        <option value="100">100</option>
-      </select>
+      <div className='header-section'>
+        <p className='header-text'>Click on a card for details - or - </p>
+        <form
+          onSubmit={(e) => handleSearch(e)}
+          className='search-form'
+        >
+          <input
+            type="text"
+            placeholder='Search for a Pokemon'
+            onChange={(e) => setSearch(e.target.value)}
+            value={search}
+          />
+        </form>
+      </div>
+      <div className='header-section'>
+        <p className='header-text'>Cards per page: </p>
+        <select
+          defaultValue="50"
+          onChange={(e) => setPerPage(e.target.value)}
+          className='per-page-select'
+        >
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
     </div>
   )
 }

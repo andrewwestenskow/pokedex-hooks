@@ -5,7 +5,7 @@ module.exports = {
   getAllPokemon: async (req, res) => {
     const { start, end } = req.query
 
-    console.log(start, end)
+    // console.log(start, end)
     if (+end - +start > 100 && +start !== +end) {
       return res.status(403).send('invalid range')
     }

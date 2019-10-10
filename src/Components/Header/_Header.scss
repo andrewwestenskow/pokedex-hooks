@@ -3,11 +3,20 @@
   height: 10vh;
   background: #FF0000;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-
+  .header-section{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .header-text{
+    font-size: 1.5rem;
+    color: white;
+  }
   .search-form{
-    width: 25%;
+    width: 50%;
     height: 40%;
     input{
       border-radius: 5px;
