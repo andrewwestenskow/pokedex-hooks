@@ -1,0 +1,19 @@
+.Link{
+  text-decoration: none;
+  .Search-Result{
+    width: 350px;
+    height: 50px;
+    background: white;
+    text-decoration: none;
+    color: black;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    text-transform: capitalize;
+    border: 1px solid black;
+  }
+  .Search-Result:hover{
+    background: red;
+    color: white;
+  }
+}
