@@ -98,7 +98,6 @@ module.exports = {
     };
     const fuse = new Fuse(list, options); // "list" is the item array
     const result = fuse.search(name);
-    console.log(result.slice(0,4))
     let details = await client.hget(result[0].name, 'details')
 
     if (details) {
@@ -118,5 +117,14 @@ module.exports = {
     } catch (error) {
       return res.status(404).send('Pokemon not found')
     }
+  },
+
+  fetchList: async (req, res) => {
+    const list = await client.lrange('pokemon', 0, -1)
+    list.forEach((element, index, array) => {
+      const info = JSON.parse(element) 
+      array[index] = {name: info.name}
+    })
+    res.status(200).send(list)
   }
 }
