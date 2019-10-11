@@ -11,12 +11,14 @@ const Dashboard = (props) => {
   if(data.pokemon.length === 0 && data.max !== 0){
     props.history.push(`/cards/page/${data.max}`)
   }
+
+  console.log(data.pokemon)
   // console.log(props.match)
   return (
     <div className='Dashboard'>
       <div className="pokemon-list-hold">
         {data.pokemon.length > 0 ? data.pokemon.map(element => (
-          <DashPokemon key={element.info.id} data={element} />
+          <DashPokemon key={element.id} data={element} />
         )) : <p>Loading</p>}
       </div>
         <PageButtons

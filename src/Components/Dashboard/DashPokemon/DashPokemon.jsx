@@ -5,24 +5,23 @@ import getBackground from '../../../functions/getBackgrounds'
 
 const DashPokemon = (props) => {
   // console.log(props.data.info)
-  const { info } = props.data
-  const {type} = info
+  const { img, id, height, weight, type, name } = props.data
   // console.log(`Name: ${props.data.name} type: ${type}`)
   
-  const height = getHeight(info.height)
-  const weight = getWeight(info.weight)
+  const useHeight = getHeight(height)
+  const useWeight = getWeight(weight)
   const {background, setting} = getBackground(type)
   return (
     <div className='DashPokemon'>
       <div className={`dash-pokemon-dark-background ${background}`}>
         <p className="dash-pokemon-name">
-          {props.data.name}
+          {name}
         </p>
         <div className={`dash-pokemon-profile ${setting}`}>
-          <img src={info.sprites.front_default} alt="" />
+          <img src={img} alt="" />
         </div>
         <div className="dash-pokemon-details">
-          <p>{`${type} Pokemon. Length: ${height}, Weight: ${weight}`}</p>
+          <p>{`${type} Pokemon. Length: ${useHeight}, Weight: ${useWeight}`}</p>
         </div>
       </div>
     </div>

@@ -48,7 +48,8 @@ module.exports = {
       const object = JSON.parse(element)
       const pokeExists = await client.exists(object.name)
       if (pokeExists === 1) {
-        return JSON.parse(pokeExists)
+        const listPokemon = await client.get(object.name)
+        return JSON.parse(listPokemon)
       } else {
         const details = await axios.get(object.url)
         const info = {
