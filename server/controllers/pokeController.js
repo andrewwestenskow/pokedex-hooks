@@ -3,6 +3,15 @@ const client = require('../redisAsync')
 const Fuse = require('fuse.js')
 
 module.exports = {
+  fetchList: async (req, res) => {
+    const list = await client.lrange('pokemon', 0, -1)
+    list.forEach((element, index, array) => {
+      const info = JSON.parse(element)
+      array[index] = { name: info.name }
+    })
+    res.status(200).send(list)
+  },
+
   getAllPokemon: async (req, res) => {
     const { start, end } = req.query
 
@@ -13,10 +22,10 @@ module.exports = {
     const exists = await client.exists('pokemon')
     const count = await client.get('count')
     let url = 'https://pokeapi.co/api/v2/pokemon'
-    
-    if(start === 'NaN'){
+
+    if (start === 'NaN') {
       console.log('yep')
-      return res.status(416).send({pokemon: [], range: count})
+      return res.status(416).send({ pokemon: [], range: count })
     }
     const updateList = async () => {
       let keepGoing = true
@@ -73,51 +82,42 @@ module.exports = {
 
   getPokemonByName: async (req, res) => {
     const { name } = req.params
-    const list = await client.lrange('pokemon', 0, -1)
-    list.forEach((element, index, array) => {
-      array[index] = JSON.parse(element)
-    })
-    
-    const options = {
-      shouldSort: true,
-      threshold: 0.6,
-      location: 0,
-      distance: 100,
-      maxPatternLength: 32,
-      minMatchCharLength: 1,
-      keys: [
-        "name"
-      ]
-    };
-    const fuse = new Fuse(list, options); // "list" is the item array
-    const result = fuse.search(name);
-    let details = await client.hget(result[0].name, 'details')
+    // const list = await client.lrange('pokemon', 0, -1)
+    // list.forEach((element, index, array) => {
+    //   array[index] = JSON.parse(element)
+    // })
 
-    if (details) {
-      return res.status(200).send(JSON.parse(details))
-    }
+    // const options = {
+    //   shouldSort: true,
+    //   threshold: 0.6,
+    //   location: 0,
+    //   distance: 100,
+    //   maxPatternLength: 32,
+    //   minMatchCharLength: 1,
+    //   keys: [
+    //     "name"
+    //   ]
+    // };
+    // const fuse = new Fuse(list, options); // "list" is the item array
+    // const result = fuse.search(name);
+    // let details = await client.hget(result[0].name, 'details')
 
-    try {
-      details = await axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
-      const info = {
-        sprites: details.data.sprites,
-        id: details.data.id,
-        height: details.data.height,
-        weight: details.data.weight
-      }
-      client.hmset(name, 'details', JSON.stringify(details.data), 'info', JSON.stringify(info))
-      return res.status(200).send(details.data)
-    } catch (error) {
-      return res.status(404).send('Pokemon not found')
-    }
-  },
+    // if (details) {
+    //   return res.status(200).send(JSON.parse(details))
+    // }
 
-  fetchList: async (req, res) => {
-    const list = await client.lrange('pokemon', 0, -1)
-    list.forEach((element, index, array) => {
-      const info = JSON.parse(element) 
-      array[index] = {name: info.name}
-    })
-    res.status(200).send(list)
+    // try {
+    //   details = await axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
+    //   const info = {
+    //     sprites: details.data.sprites,
+    //     id: details.data.id,
+    //     height: details.data.height,
+    //     weight: details.data.weight
+    //   }
+    //   client.hmset(name, 'details', JSON.stringify(details.data), 'info', JSON.stringify(info))
+    //   return res.status(200).send(details.data)
+    // } catch (error) {
+    //   return res.status(404).send('Pokemon not found')
+    // }
   }
 }
