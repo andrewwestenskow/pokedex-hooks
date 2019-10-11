@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const massive = require('massive')
 const session = require('express-session')
+const mongoose = require('mongoose')
 const { SERVER_PORT, CONNECTION_STRING, SESSION_SECRET } = process.env
 const pokeCtrl = require('./controllers/pokeController')
 
@@ -26,3 +27,10 @@ app.listen(SERVER_PORT, () => console.log(`listening on port ${SERVER_PORT}`))
 //   app.set('db', db)
 //   console.log('db set')
 // })
+
+mongoose.connect(CONNECTION_STRING,
+  { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(mdb => {
+    app.set('mongo', mdb)
+    console.log('mongo set')
+  })

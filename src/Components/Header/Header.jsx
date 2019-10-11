@@ -14,7 +14,7 @@ const Header = (props) => {
   useEffect(() => {
     axios.get('/api/pokemon/list').then(res => setList(res.data))
   }, [])
-
+  
   useEffect(() => {
     props.history.push(`/cards/page/${props.match.params.page || 1}?perPage=${+perPage}`)
   }, [perPage, props.history, props.match.params.page])

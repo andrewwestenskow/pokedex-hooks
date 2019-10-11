@@ -46,29 +46,21 @@ module.exports = {
     const data = await client.lrange('pokemon', +start, +end)
     const pokemon = await Promise.all(data.map(async element => {
       const object = JSON.parse(element)
-      const exists = await client.hget(object.name, 'info')
-      if (exists) {
-        return {
-          name: object.name,
-          url: object.url,
-          info: JSON.parse(exists)
-        }
+      const pokeExists = await client.exists(object.name)
+      if (pokeExists === 1) {
+        return JSON.parse(pokeExists)
       } else {
         const details = await axios.get(object.url)
         const info = {
-          sprites: details.data.sprites,
+          img: details.data.sprites.front_default,
           id: details.data.id,
           height: details.data.height,
           weight: details.data.weight,
-          moves: details.data.moves,
-          type: details.data.types[0].type.name
+          type: details.data.types[0].type.name,
+          name: object.name
         }
-        client.hmset(object.name, 'details', JSON.stringify(details.data), 'info', JSON.stringify(info))
-        return {
-          name: object.name,
-          url: object.url,
-          info: info
-        }
+        client.set(object.name, JSON.stringify(info))
+        return info
       }
     }))
 
