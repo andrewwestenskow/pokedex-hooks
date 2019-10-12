@@ -30,7 +30,7 @@ app.listen(SERVER_PORT, () => console.log(`listening on port ${SERVER_PORT}`))
 // })
 
 mongoose.connect(CONNECTION_STRING,
-  { useNewUrlParser: true, useUnifiedTopology: true })
+  { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
   .then(mdb => {
     app.set('mongo', mdb)
     console.log('mongo set')

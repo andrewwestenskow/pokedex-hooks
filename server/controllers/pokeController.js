@@ -61,6 +61,7 @@ module.exports = {
         return JSON.parse(listPokemon)
       } else {
         const details = await axios.get(object.url)
+        // console.log(details.data.id)
         const info = {
           img: details.data.sprites.front_default,
           id: details.data.id,
