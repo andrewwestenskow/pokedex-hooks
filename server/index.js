@@ -24,14 +24,14 @@ app.get('/api/pokemon/:name', indvCtrl.getPokemonByName)
 
 app.listen(SERVER_PORT, () => console.log(`listening on port ${SERVER_PORT}`))
 
-// massive(CONNECTION_STRING).then(db => {
-//   app.set('db', db)
-//   console.log('db set')
-// })
+massive(CONNECTION_STRING).then(db => {
+  app.set('db', db)
+  console.log('db set')
+})
 
-mongoose.connect(CONNECTION_STRING,
-  { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
-  .then(mdb => {
-    app.set('mongo', mdb)
-    console.log('mongo set')
-  })
+// mongoose.connect(CONNECTION_STRING,
+//   { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+//   .then(mdb => {
+//     app.set('mongo', mdb)
+//     console.log('mongo set')
+//   })

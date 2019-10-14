@@ -79,46 +79,5 @@ module.exports = {
 
     res.status(200).send({ pokemon, max: length })
 
-  },
-
-  getPokemonByName: async (req, res) => {
-    const { name } = req.params
-    // const list = await client.lrange('pokemon', 0, -1)
-    // list.forEach((element, index, array) => {
-    //   array[index] = JSON.parse(element)
-    // })
-
-    // const options = {
-    //   shouldSort: true,
-    //   threshold: 0.6,
-    //   location: 0,
-    //   distance: 100,
-    //   maxPatternLength: 32,
-    //   minMatchCharLength: 1,
-    //   keys: [
-    //     "name"
-    //   ]
-    // };
-    // const fuse = new Fuse(list, options); // "list" is the item array
-    // const result = fuse.search(name);
-    // let details = await client.hget(result[0].name, 'details')
-
-    // if (details) {
-    //   return res.status(200).send(JSON.parse(details))
-    // }
-
-    // try {
-    //   details = await axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
-    //   const info = {
-    //     sprites: details.data.sprites,
-    //     id: details.data.id,
-    //     height: details.data.height,
-    //     weight: details.data.weight
-    //   }
-    //   client.hmset(name, 'details', JSON.stringify(details.data), 'info', JSON.stringify(info))
-    //   return res.status(200).send(details.data)
-    // } catch (error) {
-    //   return res.status(404).send('Pokemon not found')
-    // }
   }
 }
