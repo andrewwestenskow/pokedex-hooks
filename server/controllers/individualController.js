@@ -6,10 +6,9 @@ module.exports = {
     const {name} = req.params
     const pokemonUrl = `${baseUrl}/pokemon/${name}`
     let [pokemon] = await db.check_pokemon_by_url({url: pokemonUrl})
-    console.log(pokemon)
     if(!pokemon){
       const {data} = await axios.get(pokemonUrl)
-      const newPokemon = await db.add_pokemon({
+      const [{pokemon_id}] = await db.add_pokemon({
         name: data.name,
         sort_order: data.order,
         height: data.height,
@@ -19,7 +18,17 @@ module.exports = {
         url: pokemonUrl,
         species_url: `${baseUrl}/pokemon-species/${data.id}`
       })
-      pokemon = newPokemon
+
+      const {front_default, front_shiny, front_female, front_shiny_female, back_default, back_shiny, back_female, back_shiny_female} = data.sprites
+
+      await db.add_sprites({pokemon_id, front_default, front_shiny, front_female, front_shiny_female, back_default, back_shiny, back_female, back_shiny_female})
+
+      // data.abilities.forEach(async element => {
+      //   const {url: ability} = element.ability
+      //   const {data: abilityData} = await axios.get(ability)
+
+      // })
+      pokemon = data
     }
 
     res.status(200).send(pokemon)

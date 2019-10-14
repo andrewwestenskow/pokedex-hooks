@@ -1,0 +1,2 @@
+insert into sprite(pokemon_id, front_default, front_shiny, front_female, front_shiny_female, back_default, back_shiny, back_female, back_shiny_female)
+values (${pokemon_id}, ${front_default}, ${front_shiny}, ${front_female}, ${front_shiny_female}, ${back_default}, ${back_shiny}, ${back_female}, ${back_shiny_female})
