@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS pokemon;
 CREATE TABLE "pokemon" (
   "pokemon_id" serial PRIMARY KEY,
   "name" varchar(100),
-  "order" integer,
+  "sort_order" integer,
   "height" integer,
   "weight" integer,
   "id" integer,
