@@ -18,7 +18,7 @@ module.exports = {
         id: data.id,
         base_experience: data.base_experience,
         url: pokemonUrl,
-        species_url: `${baseUrl}/pokemon-species${data.id}`
+        species_url: `${baseUrl}/pokemon-species/${data.id}`
       })
 
       await client.sadd('pokemon-set', pokemonUrl)
@@ -57,9 +57,10 @@ module.exports = {
       newerAbilities.forEach(element => {
         abilitiesToAssign.push(element.ability_id)
       })
-      abilitiesToAssign.forEach(async element => {
-        await db.assign_ability({ pokemon_id, ability_id: element })
+      const assignAbilities = abilitiesToAssign.map(element => {
+        return {pokemon_id, ability_id: element}
       })
+      await db.pokemon_ability.insert(assignAbilities)
 
       const moveCheck = []
 
