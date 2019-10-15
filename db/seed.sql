@@ -58,7 +58,7 @@ CREATE TABLE "moves" (
   "moves_id" serial PRIMARY KEY,
   "id" integer,
   "name" varchar(100),
-  "accuracty" integer,
+  "accuracy" integer,
   "effect_chance" integer,
   "pp" integer,
   "power" integer,

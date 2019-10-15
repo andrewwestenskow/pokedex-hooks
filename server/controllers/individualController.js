@@ -29,9 +29,9 @@ module.exports = {
 
       const abilityCheck = []
 
-      for(let i = 0; i < data.abilities.length; i++){
+      for (let i = 0; i < data.abilities.length; i++) {
         const j = await client.sismember('ability', data.abilities[i].ability.url)
-        if(j === 0){
+        if (j === 0) {
           abilityCheck.push(data.abilities[i])
         }
       }
@@ -51,7 +51,43 @@ module.exports = {
 
       const abilitiesToAssign = await db.ability.insert(newAbilities)
       abilitiesToAssign.forEach(async element => {
-        await db.assign_ability({pokemon_id, ability_id: element.ability_id})
+        await db.assign_ability({ pokemon_id, ability_id: element.ability_id })
+      })
+
+      const moveCheck = []
+
+      for (let i = 0; i < data.moves.length; i++) {
+        const j = await client.sismember('move', data.moves[i].move.url)
+        if (j === 0) {
+          moveCheck.push(data.moves[i])
+        }
+      }
+
+      const newMoves = await Promise.all(moveCheck.map(async element => {
+        const { url: move } = element.move
+        const { data: moveData } = await axios.get(move)
+        await client.sadd('move', move)
+        return {
+          url: move,
+          id: moveData.id,
+          name: moveData.name,
+          accuracy: moveData.accuracy,
+          effect_chance: moveData.effect_chance,
+          pp: moveData.pp,
+          power: moveData.power,
+          damage_class: moveData.damage_class.name,
+          type: moveData.type.name,
+          effect: moveData.effect_entries[0].effect,
+          short_effect: moveData.effect_entries[0].short_effect,
+          ailment: moveData.meta.ailment.name,
+          crit_rate: moveData.meta.crit_rate,
+          ailment_chance: moveData.meta.ailment_chance
+        }
+      }))
+
+      const movesToAssign = await db.moves.insert(newMoves)
+      movesToAssign.forEach(async element => {
+        await db.assign_move({ pokemon_id, moves_id: element.moves_id })
       })
     }
 
