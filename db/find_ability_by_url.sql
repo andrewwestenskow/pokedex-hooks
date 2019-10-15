@@ -1,0 +1,1 @@
+select ability_id from ability where url = ($1)

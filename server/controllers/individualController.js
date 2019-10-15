@@ -28,11 +28,15 @@ module.exports = {
       await db.add_sprites({ pokemon_id, front_default, front_shiny, front_female, front_shiny_female, back_default, back_shiny, back_female, back_shiny_female })
 
       const abilityCheck = []
+      const abilitiesToAssign = []
 
       for (let i = 0; i < data.abilities.length; i++) {
         const j = await client.sismember('ability', data.abilities[i].ability.url)
         if (j === 0) {
           abilityCheck.push(data.abilities[i])
+        } else {
+          const [{ability_id}] = await db.find_ability_by_url(data.abilities[i].ability.url)
+          abilitiesToAssign.push(ability_id)
         }
       }
 
@@ -49,9 +53,12 @@ module.exports = {
         }
       }))
 
-      const abilitiesToAssign = await db.ability.insert(newAbilities)
+      const newerAbilities = await db.ability.insert(newAbilities)
+      newerAbilities.forEach(element => {
+        abilitiesToAssign.push(element.ability_id)
+      })
       abilitiesToAssign.forEach(async element => {
-        await db.assign_ability({ pokemon_id, ability_id: element.ability_id })
+        await db.assign_ability({ pokemon_id, ability_id: element })
       })
 
       const moveCheck = []
@@ -85,7 +92,8 @@ module.exports = {
         }
       }))
 
-      const movesToAssign = await db.moves.insert(newMoves)
+      await db.moves.insert(newMoves)
+      const movesToAssign = []
       movesToAssign.forEach(async element => {
         await db.assign_move({ pokemon_id, moves_id: element.moves_id })
       })
@@ -111,7 +119,8 @@ module.exports = {
         }
       }))
 
-      const gamesToAssign = await db.game_index.insert(newGames)
+      await db.game_index.insert(newGames)
+      const gamesToAssign = []
       gamesToAssign.forEach(async element => {
         await db.assign_game({ pokemon_id, game_index_id: element.game_index_id })
       })
