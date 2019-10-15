@@ -27,12 +27,14 @@ module.exports = {
 
       await db.add_sprites({ pokemon_id, front_default, front_shiny, front_female, front_shiny_female, back_default, back_shiny, back_female, back_shiny_female })
 
-      const abilityCheck = data.abilities.filter(element => {
-        const i = client.sismember('ability', element.ability.url) === 0
-        console.log(i)
-      })
+      const abilityCheck = []
 
-      console.log(abilityCheck)
+      for(let i = 0; i < data.abilities.length; i++){
+        const j = await client.sismember('ability', data.abilities[i].ability.url)
+        if(j === 0){
+          abilityCheck.push(data.abilities[i])
+        }
+      }
 
       const newAbilities = await Promise.all(abilityCheck.map(async element => {
         const { url: ability } = element.ability
@@ -45,10 +47,12 @@ module.exports = {
           short_effect: abilityData.effect_entries[0].short_effect,
           url: ability
         }
-        // await db.assign_ability({ pokemon_id, ability_id })
       }))
 
-      const thing = await db.ability.insert(newAbilities)
+      const abilitiesToAssign = await db.ability.insert(newAbilities)
+      abilitiesToAssign.forEach(async element => {
+        await db.assign_ability({pokemon_id, ability_id: element.ability_id})
+      })
     }
 
     res.status(200).send('yep')
