@@ -1,5 +1,5 @@
 const axios = require('axios')
-const baseUrl = 'https://pokeapi.co/api/v2/'
+const baseUrl = 'https://pokeapi.co/api/v2'
 const client = require('../redisAsync')
 
 module.exports = {
@@ -27,16 +27,17 @@ module.exports = {
 
       await db.add_sprites({ pokemon_id, front_default, front_shiny, front_female, front_shiny_female, back_default, back_shiny, back_female, back_shiny_female })
 
-      const newAbilities = await Promise.all(data.abilities.map(async element => {
+      const abilityCheck = data.abilities.filter(element => {
+        const i = client.sismember('ability', element.ability.url) === 0
+        console.log(i)
+      })
+
+      console.log(abilityCheck)
+
+      const newAbilities = await Promise.all(abilityCheck.map(async element => {
         const { url: ability } = element.ability
         const { data: abilityData } = await axios.get(ability)
-        // const [{ability_id}] = db.add_ability({
-        //   id: abilityData.id,
-        //   name: abilityData.name,
-        //   effect: abilityData.effect_entries[0].effect,
-        //   short_effect: abilityData.effect_entries[0].short_effect,
-        //   url: ability
-        // })
+        await client.sadd('ability', ability)
         return {
           id: abilityData.id,
           name: abilityData.name,
