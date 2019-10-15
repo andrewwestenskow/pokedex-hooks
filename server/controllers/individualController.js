@@ -57,7 +57,7 @@ module.exports = {
       const moveCheck = []
 
       for (let i = 0; i < data.moves.length; i++) {
-        const j = await client.sismember('move', data.moves[i].move.url)
+        const j = await client.sismember('moves', data.moves[i].move.url)
         if (j === 0) {
           moveCheck.push(data.moves[i])
         }
@@ -66,7 +66,7 @@ module.exports = {
       const newMoves = await Promise.all(moveCheck.map(async element => {
         const { url: move } = element.move
         const { data: moveData } = await axios.get(move)
-        await client.sadd('move', move)
+        await client.sadd('moves', move)
         return {
           url: move,
           id: moveData.id,
