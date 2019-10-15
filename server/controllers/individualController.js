@@ -89,6 +89,32 @@ module.exports = {
       movesToAssign.forEach(async element => {
         await db.assign_move({ pokemon_id, moves_id: element.moves_id })
       })
+
+      const gameCheck = []
+
+      for (let i = 0; i < data.game_indices.length; i++) {
+        const j = await client.sismember('game', data.game_indices[i].version.url)
+        if (j === 0) {
+          gameCheck.push(data.game_indices[i])
+        }
+      }
+
+      const newGames = await Promise.all(gameCheck.map(async element => {
+        const { url: game } = element.version
+        const { data: gameData } = await axios.get(game)
+        await client.sadd('game', game)
+        return {
+          name: gameData.name,
+          group: gameData.version_group.name,
+          id: gameData.id,
+          url: game
+        }
+      }))
+
+      const gamesToAssign = await db.game_index.insert(newGames)
+      gamesToAssign.forEach(async element => {
+        await db.assign_game({ pokemon_id, game_index_id: element.game_index_id })
+      })
     }
 
     res.status(200).send('yep')

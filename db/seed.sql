@@ -20,8 +20,8 @@ CREATE TABLE "pokemon" (
   "weight" integer,
   "id" integer,
   "base_experience" integer,
-  "url" text,
-  "species_url" text 
+  "url" text unique,
+  "species_url" text unique 
 );
 
 CREATE TABLE "sprite" (
@@ -43,7 +43,7 @@ CREATE TABLE "item" (
   "name" varchar(100),
   "cost" integer,
   "sprite" text,
-  "url" text
+  "url" text unique
 );
 
 CREATE TABLE "evolution" (
@@ -69,7 +69,7 @@ CREATE TABLE "moves" (
   "ailment" varchar(50),
   "crit_rate" integer,
   "ailmnet_chance" integer,
-  "url" text
+  "url" text unique
 );
 
 CREATE TABLE "pokemon_moves" (
@@ -84,7 +84,7 @@ CREATE TABLE "ability" (
   "name" varchar(100),
   "effect" text,
   "short_effect" text,
-  "url" text
+  "url" text unique
 );
 
 CREATE TABLE "pokemon_ability" (
@@ -95,9 +95,10 @@ CREATE TABLE "pokemon_ability" (
 
 CREATE TABLE "game_index" (
   "game_index_id" serial PRIMARY KEY,
+  "id" integer
   "name" varchar(100),
   "group" varchar(100),
-  "url" text
+  "url" text unique
 );
 
 CREATE TABLE "pokemon_game" (
@@ -115,6 +116,7 @@ CREATE TABLE "pokemon_item" (
 CREATE TABLE "stat" (
   "stat_id" serial PRIMARY KEY,
   "name" varchar(100)
+  "url" text unique
 );
 
 CREATE TABLE "pokemon_stat" (
@@ -122,6 +124,6 @@ CREATE TABLE "pokemon_stat" (
   "pokemon_id" integer references pokemon(pokemon_id),
   "stat_id" integer references stat(stat_id),
   "value" integer,
-  "url" text
+  "url" text unique
 );
 
