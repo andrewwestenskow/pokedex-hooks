@@ -95,7 +95,7 @@ CREATE TABLE "pokemon_ability" (
 
 CREATE TABLE "game_index" (
   "game_index_id" serial PRIMARY KEY,
-  "id" integer
+  "id" integer,
   "name" varchar(100),
   "group" varchar(100),
   "url" text unique
@@ -115,7 +115,7 @@ CREATE TABLE "pokemon_item" (
 
 CREATE TABLE "stat" (
   "stat_id" serial PRIMARY KEY,
-  "name" varchar(100)
+  "name" varchar(100),
   "url" text unique
 );
 

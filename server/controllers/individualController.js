@@ -35,7 +35,7 @@ module.exports = {
         if (j === 0) {
           abilityCheck.push(data.abilities[i])
         } else {
-          const [{ability_id}] = await db.find_ability_by_url(data.abilities[i].ability.url)
+          const [{ ability_id }] = await db.find_ability_by_url(data.abilities[i].ability.url)
           abilitiesToAssign.push(ability_id)
         }
       }
@@ -58,20 +58,24 @@ module.exports = {
         abilitiesToAssign.push(element.ability_id)
       })
       const assignAbilities = abilitiesToAssign.map(element => {
-        return {pokemon_id, ability_id: element}
+        return { pokemon_id, ability_id: element }
       })
       await db.pokemon_ability.insert(assignAbilities)
 
-      const moveCheck = []
+      const movesCheck = []
+      const movesToAssign = []
 
       for (let i = 0; i < data.moves.length; i++) {
         const j = await client.sismember('moves', data.moves[i].move.url)
         if (j === 0) {
-          moveCheck.push(data.moves[i])
+          movesCheck.push(data.moves[i])
+        } else {
+          const [{ moves_id }] = await db.find_moves_by_url(data.moves[i].move.url)
+          movesToAssign.push(moves_id)
         }
       }
 
-      const newMoves = await Promise.all(moveCheck.map(async element => {
+      const newMoves = await Promise.all(movesCheck.map(async element => {
         const { url: move } = element.move
         const { data: moveData } = await axios.get(move)
         await client.sadd('moves', move)
@@ -93,11 +97,14 @@ module.exports = {
         }
       }))
 
-      await db.moves.insert(newMoves)
-      const movesToAssign = []
-      movesToAssign.forEach(async element => {
-        await db.assign_move({ pokemon_id, moves_id: element.moves_id })
+      const newerMoves = await db.moves.insert(newMoves)
+      newerMoves.forEach(element => {
+        movesToAssign.push(element.moves_id)
       })
+      const assignMoves = movesToAssign.map(element => {
+        return { pokemon_id, moves_id: element }
+      })
+      await db.pokemon_moves.insert(assignMoves)
 
       const gameCheck = []
 
