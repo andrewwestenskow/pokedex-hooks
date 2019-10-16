@@ -27,6 +27,18 @@ module.exports = {
 
       await db.add_sprites({ pokemon_id, front_default, front_shiny, front_female, front_shiny_female, back_default, back_shiny, back_female, back_shiny_female })
 
+      const statInsert = {}
+      data.stats.forEach(element => {
+        let colName = element.stat.name
+        if(colName.includes('-')){
+          colName = colName.replace(/-/g, '_')
+        }
+        statInsert[colName] = element.base_stat
+      })
+      const {hp, attack, defense, special_attack, special_defense, speed, accuracy, evasion} = statInsert
+
+      await db.add_stats({pokemon_id, hp, attack, defense, special_attack, special_defense, speed, accuracy, evasion})
+
       const abilityCheck = []
       const abilitiesToAssign = []
 
@@ -139,17 +151,29 @@ module.exports = {
         return { pokemon_id, game_index_id: element }
       })
       await db.pokemon_game.insert(assignGames)
-      
+
     }
 
     res.status(200).send('yep')
   },
 
   massiveTest: async (req, res) => {
-    const db = req.app.get('db')
+    const { name } = req.params
 
-    db.stat.insert([{ name: 'andrew' }, { name: 'bob' }, { name: 'ranch' }])
+    const { data: pokemon } = await axios.get(`${baseUrl}/pokemon/${name}`)
+    const { stats } = pokemon
+    const canInsert = { pokemon_id: 1 }
+    stats.forEach(element => {
+      let colName = element.stat.name
+      if(colName.includes('-')){
+        colName = colName.replace(/-/g, '_')
+        console.log(colName)
+      }
+      canInsert[colName] = element.base_stat
+    })
 
-    res.sendStatus(200)
+
+
+    res.status(200).send(canInsert)
   }
 }

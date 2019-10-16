@@ -115,15 +115,13 @@ CREATE TABLE "pokemon_item" (
 
 CREATE TABLE "stat" (
   "stat_id" serial PRIMARY KEY,
-  "name" varchar(100),
-  "url" text unique
-);
-
-CREATE TABLE "pokemon_stat" (
-  "pokemon_stat_id" serial PRIMARY KEY,
   "pokemon_id" integer references pokemon(pokemon_id),
-  "stat_id" integer references stat(stat_id),
-  "value" integer,
-  "url" text unique
+  "hp" integer,
+  "attack" integer,
+  "defense" integer,
+  "special_attack" integer,
+  "special_defense" integer,
+  "speed" integer,
+  "accuracy" integer,
+  "evasion" integer
 );
-

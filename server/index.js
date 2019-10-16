@@ -21,7 +21,7 @@ app.use(session({
 app.get('/api/pokemon', pokeCtrl.getAllPokemon)
 app.get('/api/pokemon/list', pokeCtrl.fetchList)
 app.get('/api/pokemon/:name', indvCtrl.getPokemonByName)
-app.get('/massive', indvCtrl.massiveTest)
+app.get('/massive/:name', indvCtrl.massiveTest)
 
 app.listen(SERVER_PORT, () => console.log(`listening on port ${SERVER_PORT}`))
 
