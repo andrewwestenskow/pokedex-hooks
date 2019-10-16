@@ -107,11 +107,15 @@ module.exports = {
       await db.pokemon_moves.insert(assignMoves)
 
       const gameCheck = []
+      const gamesToAssign = []
 
       for (let i = 0; i < data.game_indices.length; i++) {
         const j = await client.sismember('game', data.game_indices[i].version.url)
         if (j === 0) {
           gameCheck.push(data.game_indices[i])
+        } else {
+          const [{ game_index_id }] = await db.find_game_index_by_url(data.game_indices[i].version.url)
+          gamesToAssign.push(game_index_id)
         }
       }
 
@@ -127,11 +131,15 @@ module.exports = {
         }
       }))
 
-      await db.game_index.insert(newGames)
-      const gamesToAssign = []
-      gamesToAssign.forEach(async element => {
-        await db.assign_game({ pokemon_id, game_index_id: element.game_index_id })
+      const newerGames = await db.game_index.insert(newGames)
+      newerGames.forEach(element => {
+        gamesToAssign.push(element.game_index_id)
       })
+      const assignGames = gamesToAssign.map(element => {
+        return { pokemon_id, game_index_id: element }
+      })
+      await db.pokemon_game.insert(assignGames)
+      
     }
 
     res.status(200).send('yep')
