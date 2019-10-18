@@ -47,9 +47,7 @@ module.exports = {
       //FETCH EVOLUTIONS
       const { data: speciesData } = await axios.get(`${baseUrl}/pokemon-species/${name}`)
       const { data: { chain: evolutionChain } } = await axios.get(speciesData.evolution_chain.url)
-
       let evolutions = []
-
       const extractEvolution = (evolution, name) => {
         if (evolution.species.name === name) {
           evolutions = [...evolution.evolves_to]
@@ -59,15 +57,15 @@ module.exports = {
           evolutions = evolutions.map(element => {
             if (element.evolution_details[0].item) {
               return {
-                pokemon_id: 1,
-                evolves_from: 'url',
+                pokemon_id: pokemon_id,
+                evolves_from: null,
                 evolves_to: element.species.name,
                 item: element.evolution_details[0].item.name
               }
             } else {
               return {
-                pokemon_id: 1,
-                evolves_from: 'url',
+                pokemon_id: pokemon_id,
+                evolves_from: null,
                 evolves_to: element.species.name,
                 item: null
               }
@@ -85,15 +83,15 @@ module.exports = {
               evolutions = evolutions.map(element => {
                 if (element.evolution_details[0].item) {
                   return {
-                    pokemon_id: 1,
-                    evolves_from: 'url',
+                    pokemon_id: pokemon_id,
+                    evolves_from: speciesData.evolves_from_species.url,
                     evolves_to: element.species.name,
                     item: element.evolution_details[0].item.name
                   }
                 } else {
                   return {
-                    pokemon_id: 1,
-                    evolves_from: 'url',
+                    pokemon_id: pokemon_id,
+                    evolves_from: speciesData.evolves_from_species.url,
                     evolves_to: element.species.name,
                     item: null
                   }
@@ -108,6 +106,18 @@ module.exports = {
         }
       }
       extractEvolution(evolutionChain, name)
+
+      if (evolutions.length === 0) {
+        const { data: finalEvolution } = await axios.get(`${baseUrl}/pokemon-species/${name}`)
+        evolutions = [{
+          pokemon_id: pokemon_id,
+          evolves_from: finalEvolution.evolves_from_species.url,
+          evolves_to: null,
+          item: null
+        }]
+      }
+
+      db.evolution.insert(evolutions)
 
       //FETCH AND INSERT ABILITIES
 
@@ -298,9 +308,9 @@ module.exports = {
     }
     extractEvolution(evolutionChain, name)
 
-    if(evolutions.length === 0){
-      const {data: finalEvolution} = await axios.get(`${baseUrl}/pokemon-species/${name}`)
-      evolutions =[{
+    if (evolutions.length === 0) {
+      const { data: finalEvolution } = await axios.get(`${baseUrl}/pokemon-species/${name}`)
+      evolutions = [{
         pokemon_id: 1,
         evolves_from: finalEvolution.evolves_from_species.url,
         evolves_to: null,
