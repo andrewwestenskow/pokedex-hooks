@@ -164,16 +164,27 @@ module.exports = {
     const { data: { chain: evolutionChain } } = await axios.get(pokemon.evolution_chain.url)
     let evolutions = []
     const extractEvolution = (evolution, name) => {
+      console.log(00000000000000000)
+      console.log(evolution)
       if(evolution.species.name === name){
-        evolutions = [...evolutionChain.evolves_to]
+        console.log(3333333333)
+        evolutions = [...evolution.evolves_to]
+        evolutions.forEach(element => {
+          delete element.evolves_to
+        })
         return
       } else {
-        const toCheck = [...evolutionChain.evolves_to]
+        const toCheck = [...evolution.evolves_to]
         toCheck.forEach(element => {
+          console.log(1111111111111)
+          console.log(element)
           if(element.species.name === name){
             evolutions = [...element.evolves_to]
           } else {
-            extractEvolution(element.evolves_to)
+            element.evolves_to.forEach(element => {
+              console.log(22222222222)
+              extractEvolution(element, element.species.name)
+            })
           }
         })
       }
