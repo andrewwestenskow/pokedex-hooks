@@ -10,6 +10,7 @@ module.exports = {
     const checkPokemon = await client.sismember('pokemon-set', pokemonUrl)
     if (checkPokemon === 0) {
       const { data } = await axios.get(pokemonUrl)
+      //INSERT BASIC POKEMON DATA
       const [{ pokemon_id }] = await db.add_pokemon({
         name: data.name,
         sort_order: data.order,
@@ -23,9 +24,13 @@ module.exports = {
 
       await client.sadd('pokemon-set', pokemonUrl)
 
+      //INSERT SPRITES
+
       const { front_default, front_shiny, front_female, front_shiny_female, back_default, back_shiny, back_female, back_shiny_female } = data.sprites
 
       await db.add_sprites({ pokemon_id, front_default, front_shiny, front_female, front_shiny_female, back_default, back_shiny, back_female, back_shiny_female })
+
+      //INSERT STATS
 
       const statInsert = {}
       data.stats.forEach(element => {
@@ -38,6 +43,73 @@ module.exports = {
       const { hp, attack, defense, special_attack, special_defense, speed, accuracy, evasion } = statInsert
 
       await db.add_stats({ pokemon_id, hp, attack, defense, special_attack, special_defense, speed, accuracy, evasion })
+
+      //FETCH EVOLUTIONS
+      const { data: speciesData } = await axios.get(`${baseUrl}/pokemon-species/${name}`)
+      const { data: { chain: evolutionChain } } = await axios.get(speciesData.evolution_chain.url)
+
+      let evolutions = []
+
+      const extractEvolution = (evolution, name) => {
+        if (evolution.species.name === name) {
+          evolutions = [...evolution.evolves_to]
+          evolutions.forEach(element => {
+            delete element.evolves_to
+          })
+          evolutions = evolutions.map(element => {
+            if (element.evolution_details[0].item) {
+              return {
+                pokemon_id: 1,
+                evolves_from: 'url',
+                evolves_to: element.species.name,
+                item: element.evolution_details[0].item.name
+              }
+            } else {
+              return {
+                pokemon_id: 1,
+                evolves_from: 'url',
+                evolves_to: element.species.name,
+                item: null
+              }
+            }
+          })
+          return
+        } else {
+          const toCheck = [...evolution.evolves_to]
+          toCheck.forEach(element => {
+            if (element.species.name === name) {
+              evolutions = [...element.evolves_to]
+              evolutions.forEach(element => {
+                delete element.evolves_to
+              })
+              evolutions = evolutions.map(element => {
+                if (element.evolution_details[0].item) {
+                  return {
+                    pokemon_id: 1,
+                    evolves_from: 'url',
+                    evolves_to: element.species.name,
+                    item: element.evolution_details[0].item.name
+                  }
+                } else {
+                  return {
+                    pokemon_id: 1,
+                    evolves_from: 'url',
+                    evolves_to: element.species.name,
+                    item: null
+                  }
+                }
+              })
+            } else {
+              element.evolves_to.forEach(element => {
+                extractEvolution(element, element.species.name)
+              })
+            }
+          })
+        }
+      }
+      extractEvolution(evolutionChain, name)
+
+      //FETCH AND INSERT ABILITIES
 
       const abilityCheck = []
       const abilitiesToAssign = []
@@ -73,6 +145,8 @@ module.exports = {
         return { pokemon_id, ability_id: element }
       })
       await db.pokemon_ability.insert(assignAbilities)
+
+      //FETCH AND INSERT MOVES
 
       const movesCheck = []
       const movesToAssign = []
@@ -118,6 +192,8 @@ module.exports = {
       })
       await db.pokemon_moves.insert(assignMoves)
 
+      //FETCH AND INSERT GAMES
+
       const gameCheck = []
       const gamesToAssign = []
 
@@ -160,29 +236,60 @@ module.exports = {
   massiveTest: async (req, res) => {
     const { name } = req.params
 
-    const { data: pokemon } = await axios.get(`${baseUrl}/pokemon-species/${name}`)
-    const { data: { chain: evolutionChain } } = await axios.get(pokemon.evolution_chain.url)
+    const { data: speciesData } = await axios.get(`${baseUrl}/pokemon-species/${name}`)
+    const { data: { chain: evolutionChain } } = await axios.get(speciesData.evolution_chain.url)
     let evolutions = []
     const extractEvolution = (evolution, name) => {
-      console.log(00000000000000000)
-      console.log(evolution)
-      if(evolution.species.name === name){
-        console.log(3333333333)
+      if (evolution.species.name === name) {
         evolutions = [...evolution.evolves_to]
         evolutions.forEach(element => {
           delete element.evolves_to
+        })
+        evolutions = evolutions.map(element => {
+          if (element.evolution_details[0].item) {
+            return {
+              pokemon_id: 1,
+              evolves_from: null,
+              evolves_to: element.species.name,
+              item: element.evolution_details[0].item.name
+            }
+          } else {
+            return {
+              pokemon_id: 1,
+              evolves_from: null,
+              evolves_to: element.species.name,
+              item: null
+            }
+          }
         })
         return
       } else {
         const toCheck = [...evolution.evolves_to]
         toCheck.forEach(element => {
-          console.log(1111111111111)
-          console.log(element)
-          if(element.species.name === name){
+          if (element.species.name === name) {
             evolutions = [...element.evolves_to]
+            evolutions.forEach(element => {
+              delete element.evolves_to
+            })
+            evolutions = evolutions.map(element => {
+              if (element.evolution_details[0].item) {
+                return {
+                  pokemon_id: 1,
+                  evolves_from: speciesData.evolves_from_species.url,
+                  evolves_to: element.species.name,
+                  item: element.evolution_details[0].item.name
+                }
+              } else {
+                return {
+                  pokemon_id: 1,
+                  evolves_from: speciesData.evolves_from_species.url,
+                  evolves_to: element.species.name,
+                  item: null
+                }
+              }
+            })
           } else {
             element.evolves_to.forEach(element => {
-              console.log(22222222222)
               extractEvolution(element, element.species.name)
             })
           }
@@ -190,6 +297,16 @@ module.exports = {
       }
     }
     extractEvolution(evolutionChain, name)
+
+    if(evolutions.length === 0){
+      const {data: finalEvolution} = await axios.get(`${baseUrl}/pokemon-species/${name}`)
+      evolutions =[{
+        pokemon_id: 1,
+        evolves_from: finalEvolution.evolves_from_species.url,
+        evolves_to: null,
+        item: null
+      }]
+    }
 
 
     res.status(200).send(evolutions)
