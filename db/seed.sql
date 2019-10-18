@@ -1,6 +1,5 @@
 DROP TABLE IF EXISTS pokemon_moves;
 DROP TABLE IF EXISTS pokemon_ability;
-DROP TABLE IF EXISTS pokemon_stat;
 DROP TABLE IF EXISTS pokemon_game;
 DROP TABLE IF EXISTS pokemon_item;
 DROP TABLE IF EXISTS sprite;

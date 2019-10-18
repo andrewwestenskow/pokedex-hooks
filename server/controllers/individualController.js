@@ -30,14 +30,14 @@ module.exports = {
       const statInsert = {}
       data.stats.forEach(element => {
         let colName = element.stat.name
-        if(colName.includes('-')){
+        if (colName.includes('-')) {
           colName = colName.replace(/-/g, '_')
         }
         statInsert[colName] = element.base_stat
       })
-      const {hp, attack, defense, special_attack, special_defense, speed, accuracy, evasion} = statInsert
+      const { hp, attack, defense, special_attack, special_defense, speed, accuracy, evasion } = statInsert
 
-      await db.add_stats({pokemon_id, hp, attack, defense, special_attack, special_defense, speed, accuracy, evasion})
+      await db.add_stats({ pokemon_id, hp, attack, defense, special_attack, special_defense, speed, accuracy, evasion })
 
       const abilityCheck = []
       const abilitiesToAssign = []
@@ -160,20 +160,27 @@ module.exports = {
   massiveTest: async (req, res) => {
     const { name } = req.params
 
-    const { data: pokemon } = await axios.get(`${baseUrl}/pokemon/${name}`)
-    const { stats } = pokemon
-    const canInsert = { pokemon_id: 1 }
-    stats.forEach(element => {
-      let colName = element.stat.name
-      if(colName.includes('-')){
-        colName = colName.replace(/-/g, '_')
-        console.log(colName)
+    const { data: pokemon } = await axios.get(`${baseUrl}/pokemon-species/${name}`)
+    const { data: { chain: evolutionChain } } = await axios.get(pokemon.evolution_chain.url)
+    let evolutions = []
+    const extractEvolution = (evolution, name) => {
+      if(evolution.species.name === name){
+        evolutions = [...evolutionChain.evolves_to]
+        return
+      } else {
+        const toCheck = [...evolutionChain.evolves_to]
+        toCheck.forEach(element => {
+          if(element.species.name === name){
+            evolutions = [...element.evolves_to]
+          } else {
+            extractEvolution(element.evolves_to)
+          }
+        })
       }
-      canInsert[colName] = element.base_stat
-    })
+    }
+    extractEvolution(evolutionChain, name)
 
 
-
-    res.status(200).send(canInsert)
+    res.status(200).send(evolutions)
   }
 }
