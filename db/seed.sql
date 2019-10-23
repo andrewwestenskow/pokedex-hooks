@@ -48,8 +48,10 @@ CREATE TABLE "item" (
 CREATE TABLE "evolution" (
   "evolution_id" serial PRIMARY KEY,
   "pokemon_id" integer references pokemon(pokemon_id),
-  "evolves_from" integer references pokemon(pokemon_id),
-  "evolves_to" integer references pokemon(pokemon_id),
+  "evolves_from" varchar(100),
+  "evolves_to" varchar(100),
+  "evolves_to_sprite" text,
+  "evolves_from_sprite" text, 
   "item" integer references item(item_id)
 );
 
